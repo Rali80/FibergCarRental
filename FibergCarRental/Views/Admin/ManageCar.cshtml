@@ -1,0 +1,30 @@
+﻿@model IEnumerable<FibergCarRental.Models.Car>
+
+<h1>Manage Cars</h1>
+<a asp-action="AddCar" class="btn btn-success mb-3">Add New Car</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Make</th>
+            <th>Model</th>
+            <th>Availability</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var car in Model)
+        {
+            <tr>
+                <td>@car.Make</td>
+                <td>@car.Model</td>
+                <td>@(car.IsAvailable ? "Available" : "Not Available")</td>
+                <td>
+                    <a asp-action="EditCar" asp-route-id="@car.Id" class="btn btn-primary btn-sm">Edit</a>
+                    <form asp-action="DeleteCar" asp-route-id="@car.Id" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

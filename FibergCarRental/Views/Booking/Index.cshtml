@@ -1,0 +1,41 @@
+﻿@model IEnumerable<FibergCarRental.Models.Booking>
+
+<h1>My Bookings</h1>
+@if (Model.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Car</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Booking Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var booking in Model)
+            {
+                <tr>
+                    <td>@booking.Car.Make @booking.Car.Model</td>
+                    <td>@booking.StartDate.ToString("d")</td>
+                    <td>@booking.EndDate.ToString("d")</td>
+                    <td>@booking.BookingDate.ToString("d")</td>
+                    <td>
+                        @if (booking.StartDate > DateTime.Now)
+                        {
+                            <form asp-controller="Booking" asp-action="CancelBooking" method="post" style="display:inline;">
+                                <input type="hidden" name="bookingId" value="@booking.Id" />
+                                <button type="submit" class="btn btn-danger btn-sm">Cancel</button>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No bookings found.</p>
+}

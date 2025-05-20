@@ -1,0 +1,32 @@
+﻿@model IEnumerable<FibergCarRental.Models.Booking>
+
+<h1>Manage Bookings</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Car</th>
+            <th>Customer</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Booking Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var booking in Model)
+        {
+            <tr>
+                <td>@booking.Car.Make @booking.Car.Model</td>
+                <td>@booking.Customer.FirstName @booking.Customer.LastName</td>
+                <td>@booking.StartDate.ToString("d")</td>
+                <td>@booking.EndDate.ToString("d")</td>
+                <td>@booking.BookingDate.ToString("d")</td>
+                <td>
+                    <form asp-action="DeleteBooking" asp-route-id="@booking.Id" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,23 @@
+﻿@model FibergCarRental.Models.Customer
+
+<h1>Add New Customer</h1>
+<form asp-controller="Admin" asp-action="AddCustomer" method="post">
+    <div class="mb-3">
+        <label for="firstName" class="form-label">First Name</label>
+        <input type="text" class="form-control" id="firstName" name="FirstName" required />
+    </div>
+    <div class="mb-3">
+        <label for="lastName" class="form-label">Last Name</label>
+        <input type="text" class="form-control" id="lastName" name="LastName" required />
+    </div>
+    <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" class="form-control" id="email" name="Email" required />
+    </div>
+    <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input type="text" class="form-control" id="password" name="Password" required />
+    </div>
+    <button type="submit" class="btn btn-success">Add Customer</button>
+    <a asp-action="ManageCustomers" class="btn btn-secondary">Cancel</a>
+</form>
