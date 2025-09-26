@@ -20,7 +20,7 @@
                 <td>@(car.IsAvailable ? "Available" : "Not Available")</td>
                 <td>
                     <a asp-action="EditCar" asp-route-id="@car.Id" class="btn btn-primary btn-sm">Edit</a>
-                    <form asp-action="DeleteCar" asp-route-id="@car.Id" method="post" style="display:inline;">
+                    <form asp-action="DeleteCar" asp-route-id="@car.Id" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this car?');">
                         <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                     </form>
                 </td>

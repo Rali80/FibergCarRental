@@ -22,7 +22,7 @@
                 <td>@booking.EndDate.ToString("d")</td>
                 <td>@booking.BookingDate.ToString("d")</td>
                 <td>
-                    <form asp-action="DeleteBooking" asp-route-id="@booking.Id" method="post" style="display:inline;">
+                    <form asp-action="DeleteBooking" asp-route-id="@booking.Id" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this booking?');">
                         <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                     </form>
                 </td>

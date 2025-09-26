@@ -1,6 +1,12 @@
 ﻿@model FibergCarRental.Models.Customer
 
 <h1>Add New Customer</h1>
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewBag.Error
+    </div>
+}
 <form asp-controller="Admin" asp-action="AddCustomer" method="post">
     <div class="mb-3">
         <label for="firstName" class="form-label">First Name</label>
@@ -16,7 +22,7 @@
     </div>
     <div class="mb-3">
         <label for="password" class="form-label">Password</label>
-        <input type="text" class="form-control" id="password" name="Password" required />
+        <input type="password" class="form-control" id="password" name="Password" required minlength="6" />
     </div>
     <button type="submit" class="btn btn-success">Add Customer</button>
     <a asp-action="ManageCustomers" class="btn btn-secondary">Cancel</a>

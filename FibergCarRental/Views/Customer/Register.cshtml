@@ -1,0 +1,30 @@
+﻿@model dynamic
+
+<h1>Register</h1>
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewBag.Error
+    </div>
+}
+<form asp-controller="Customer" asp-action="Register" method="post">
+    <input type="hidden" name="carId" value="@ViewBag.CarId" />
+    <div class="mb-3">
+        <label for="firstName" class="form-label">First Name</label>
+        <input type="text" class="form-control" id="firstName" name="firstName" required />
+    </div>
+    <div class="mb-3">
+        <label for="lastName" class="form-label">Last Name</label>
+        <input type="text" class="form-control" id="lastName" name="lastName" required />
+    </div>
+    <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" class="form-control" id="email" name="email" required />
+    </div>
+    <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" class="form-control" id="password" name="password" required minlength="6" />
+    </div>
+    <button type="submit" class="btn btn-success">Register</button>
+</form>
+<p>Already have an account? <a asp-controller="Customer" asp-action="Login" asp-route-carId="@ViewBag.CarId">Login</a></p>

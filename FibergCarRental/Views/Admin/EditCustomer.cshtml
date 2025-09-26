@@ -1,6 +1,12 @@
 ﻿@model FibergCarRental.Models.Customer
 
 <h1>Edit Customer</h1>
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewBag.Error
+    </div>
+}
 <form asp-controller="Admin" asp-action="EditCustomer" method="post">
     <input type="hidden" name="Id" value="@Model.Id" />
     <div class="mb-3">
@@ -16,8 +22,8 @@
         <input type="email" class="form-control" id="email" name="Email" value="@Model.Email" required />
     </div>
     <div class="mb-3">
-        <label for="password" class="form-label">Password</label>
-        <input type="text" class="form-control" id="password" name="Password" value="@Model.Password" required />
+        <label for="password" class="form-label">Password (leave blank to keep unchanged)</label>
+        <input type="password" class="form-control" id="password" name="Password" minlength="6" />
     </div>
     <button type="submit" class="btn btn-primary">Save Changes</button>
     <a asp-action="ManageCustomers" class="btn btn-secondary">Cancel</a>

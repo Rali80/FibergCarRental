@@ -9,13 +9,11 @@ namespace FibergCarRental.Controllers
     public class BookingController : Controller
     {
         private readonly ICarRepository _carRepository;
-        private readonly ICustomerRepository _customerRepository;
         private readonly IBookingRepository _bookingRepository;
 
-        public BookingController(ICarRepository carRepository, ICustomerRepository customerRepository, IBookingRepository bookingRepository)
+        public BookingController(ICarRepository carRepository, IBookingRepository bookingRepository)
         {
             _carRepository = carRepository;
-            _customerRepository = customerRepository;
             _bookingRepository = bookingRepository;
         }
 
@@ -29,6 +27,11 @@ namespace FibergCarRental.Controllers
                 {
                     Console.WriteLine($"Car with ID {carId} not found");
                     return NotFound();
+                }
+                if (!car.IsAvailable)
+                {
+                    ViewBag.Error = "This car is not available for booking.";
+                    return View("Error");
                 }
                 ViewBag.Car = car;
                 return View();
@@ -49,8 +52,22 @@ namespace FibergCarRental.Controllers
                 Console.WriteLine($"Booking POST with carId: {carId}, CustomerId: {customerId}");
                 if (!customerId.HasValue)
                 {
-                    Console.WriteLine("No CustomerId in session, redirecting to Book");
-                    return RedirectToAction("Book", new { carId });
+                    Console.WriteLine("No CustomerId in session, redirecting to Login");
+                    return RedirectToAction("Login", "Customer", new { carId });
+                }
+
+                if (startDate < DateTime.Today || endDate < startDate)
+                {
+                    ViewBag.Error = "Invalid booking dates.";
+                    var car1 = await _carRepository.GetByIdAsync(carId);
+                    ViewBag.Car = car1 ?? new Car { Id = carId };
+                    return View();
+                }
+
+                var car = await _carRepository.GetByIdAsync(carId);
+                if (car == null || !car.IsAvailable)
+                {
+                    return View("Error", new { message = "The selected car is not available." });
                 }
 
                 var booking = new Booking
@@ -70,68 +87,6 @@ namespace FibergCarRental.Controllers
             {
                 Console.WriteLine($"Error in Book POST: {ex.Message}");
                 return View("Error", new { message = $"Failed to create booking: {ex.Message}" });
-            }
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Login(string email, string password, int carId)
-        {
-            try
-            {
-                Console.WriteLine($"Login attempt with email: {email}, carId: {carId}");
-                var customer = await _customerRepository.GetByEmailAndPasswordAsync(email, password);
-                if (customer == null)
-                {
-                    Console.WriteLine("Invalid email or password");
-                    ViewBag.Error = "Invalid email or password.";
-                    var car = await _carRepository.GetByIdAsync(carId);
-                    ViewBag.Car = car ?? new Car { Id = carId }; // Fallback si car es null
-                    return View("Book");
-                }
-
-                HttpContext.Session.SetInt32("CustomerId", customer.Id);
-                Console.WriteLine($"Login successful, CustomerId {customer.Id} set in session");
-                return RedirectToAction("Book", new { carId });
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error in Login: {ex.Message}");
-                ViewBag.Error = $"Login failed: {ex.Message}";
-                var car = await _carRepository.GetByIdAsync(carId);
-                ViewBag.Car = car ?? new Car { Id = carId };
-                return View("Book");
-            }
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Register(string firstName, string lastName, string email, string password, int carId)
-        {
-            try
-            {
-                Console.WriteLine($"Register attempt with email: {email}, carId: {carId}");
-                var existingCustomer = await _customerRepository.GetByEmailAndPasswordAsync(email, null);
-                if (existingCustomer != null)
-                {
-                    Console.WriteLine("Email already registered");
-                    ViewBag.Error = "This email is already registered. Please use a different email or log in.";
-                    var car = await _carRepository.GetByIdAsync(carId);
-                    ViewBag.Car = car ?? new Car { Id = carId };
-                    return View("Book");
-                }
-
-                var customer = new Customer { FirstName = firstName, LastName = lastName, Email = email, Password = password };
-                await _customerRepository.AddAsync(customer);
-                HttpContext.Session.SetInt32("CustomerId", customer.Id);
-                Console.WriteLine($"Register successful, CustomerId {customer.Id} set in session");
-                return RedirectToAction("Book", new { carId });
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error in Register: {ex.Message}");
-                ViewBag.Error = $"Registration failed: {ex.Message}";
-                var car = await _carRepository.GetByIdAsync(carId);
-                ViewBag.Car = car ?? new Car { Id = carId };
-                return View("Book");
             }
         }
 
@@ -162,8 +117,8 @@ namespace FibergCarRental.Controllers
                 Console.WriteLine($"Accessing MyBookings for CustomerId: {customerId}");
                 if (!customerId.HasValue)
                 {
-                    Console.WriteLine("No CustomerId in session, redirecting to Book");
-                    return RedirectToAction("Book", new { carId = 1 });
+                    Console.WriteLine("No CustomerId in session, redirecting to Login");
+                    return RedirectToAction("Login", "Customer", new { carId = 1 });
                 }
 
                 var bookings = await _bookingRepository.GetByCustomerIdAsync(customerId.Value);

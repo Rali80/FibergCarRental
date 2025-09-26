@@ -6,11 +6,17 @@
     {
         <div class="col-md-4 mb-3">
             <div class="card">
-                <img src="@car.ImageUrls.FirstOrDefault()" class="card-img-top" alt="@car.Make @car.Model" style="height: 200px; object-fit: cover;" />
+                <img src="@car.ImageUrls.First()" class="card-img-top" alt="@car.Make @car.Model" style="height: 200px; object-fit: cover;" />
                 <div class="card-body">
                     <h5 class="card-title">@car.Make @car.Model</h5>
-                    <a asp-controller="Home" asp-action="CarDetails" asp-route-id="@car.Id" class="btn btn-primary">View Details</a>
-                    <a asp-controller="Booking" asp-action="Book" asp-route-carId="@car.Id" class="btn btn-success">Book</a>
+                    <span class="badge @(car.IsAvailable ? "bg-success" : "bg-danger")">
+                        @(car.IsAvailable ? "Available" : "Not Available")
+                    </span>
+                    +<a asp-controller="Home" asp-action="CarDetails" asp-route-id="@car.Id" class="btn btn-primary">View Details</a>
+                    @if (car.IsAvailable)
+                    {
+                        <a asp-controller="Booking" asp-action="Book" asp-route-carId="@car.Id" class="btn btn-success">Book</a>
+                    }
                 </div>
             </div>
         </div>

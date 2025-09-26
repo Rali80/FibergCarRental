@@ -1,5 +1,4 @@
 ﻿@model FibergCarRental.Models.Car
-
 <h1>@Model.Make @Model.Model</h1>
 <div class="row">
     <div class="col-md-6">
@@ -11,21 +10,33 @@
                         <img src="@Model.ImageUrls[i]" class="d-block w-100" alt="@Model.Make @Model.Model" style="height: 300px; object-fit: cover;" />
                     </div>
                 }
+                @if (!Model.ImageUrls.Any())
+                {
+                    <div class="carousel-item active">
+                        <img src="https://via.placeholder.com/300" class="d-block w-100" alt="No Image" style="height: 300px; object-fit: cover;" />
+                    </div>
+                }
             </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carImages" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carImages" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-            </button>
+            @if (Model.ImageUrls.Count > 1)
+            {
+                <button class="carousel-control-prev" type="button" data-bs-target="#carImages" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carImages" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            }
         </div>
     </div>
     <div class="col-md-6">
         <p><strong>Make:</strong> @Model.Make</p>
         <p><strong>Model:</strong> @Model.Model</p>
         <p><strong>Availability:</strong> @(Model.IsAvailable ? "Available" : "Not Available")</p>
-        <a asp-controller="Booking" asp-action="Book" asp-route-carId="@Model.Id" class="btn btn-success">Book This Car</a>
+        @if (Model.IsAvailable)
+        {
+            <a asp-controller="Booking" asp-action="Book" asp-route-carId="@Model.Id" class="btn btn-success">Book This Car</a>
+        }
     </div>
 </div>

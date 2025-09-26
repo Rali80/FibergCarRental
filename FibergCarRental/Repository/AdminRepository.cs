@@ -1,6 +1,8 @@
 ﻿using FibergCarRental.Data;
 using FibergCarRental.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace FibergCarRental.Repository
 {
@@ -22,21 +24,25 @@ namespace FibergCarRental.Repository
         {
             return await _context.Admins.FindAsync(id);
         }
-
         public async Task<Admin> GetByEmailAndPasswordAsync(string email, string password)
         {
+            Console.WriteLine($"[Repositorio] Buscando admin con Email: '{email}' y Password: '{password}'");
+
             return await _context.Admins
                 .FirstOrDefaultAsync(a => a.Email == email && a.Password == password);
         }
 
+
         public async Task AddAsync(Admin admin)
         {
+            admin.Password = BCrypt.Net.BCrypt.HashPassword(admin.Password);
             _context.Admins.Add(admin);
             await _context.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(Admin admin)
         {
+           
             _context.Admins.Update(admin);
             await _context.SaveChangesAsync();
         }

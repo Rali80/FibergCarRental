@@ -1,27 +1,32 @@
 ﻿@model FibergCarRental.Models.Car
 
-<h1>Edit Car</h1>
-<form asp-controller="Admin" asp-action="EditCar" method="post">
-    <input type="hidden" name="Id" value="@Model.Id" />
-    <div class="mb-3">
-        <label for="make" class="form-label">Make</label>
-        <input type="text" class="form-control" id="make" name="Make" value="@Model.Make" required />
+<h1>Add New Car</h1>
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewBag.Error
     </div>
-    <div class="mb-3">
-        <label for="model" class="form-label">Model</label>
-        <input type="text" class="form-control" id="model" name="Model" value="@Model.Model" required />
+}
+ <form asp-action="EditCar" method="post">
+    <input type="hidden" asp-for="Id" />
+    <div class="form-group">
+        <label>Make</label>
+        <input asp-for="Make" class="form-control" required />
     </div>
+    <div class="form-group">
+        <label>Model</label>
+        <input asp-for="Model" class="form-control" required />
     <div class="mb-3">
         <label for="isAvailable" class="form-label">Available</label>
         <select class="form-control" id="isAvailable" name="IsAvailable">
-            <option value="true" selected="@(Model.IsAvailable ? "selected" : "")">Yes</option>
-            <option value="false" selected="@(!Model.IsAvailable ? "selected" : "")">No</option>
+            <option value="true">Yes</option>
+            <option value="false">No</option>
         </select>
     </div>
     <div class="mb-3">
         <label for="imageUrls" class="form-label">Image URLs (one per line)</label>
-        <textarea class="form-control" id="imageUrls" name="imageUrls" rows="4">@string.Join("\n", Model.ImageUrls)</textarea>
+        <textarea class="form-control" id="imageUrls" name="imageUrls" rows="4" placeholder="Enter image URLs, one per line"></textarea>
     </div>
-    <button type="submit" class="btn btn-primary">Save Changes</button>
+    <button type="submit" class="btn btn-success">Add Car</button>
     <a asp-action="ManageCars" class="btn btn-secondary">Cancel</a>
 </form>

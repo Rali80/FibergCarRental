@@ -1,14 +1,15 @@
 ﻿@model FibergCarRental.Models.Booking
 
+
 <h1>Booking Confirmed</h1>
 <div class="card">
     <div class="card-body">
         <h5 class="card-title">Booking Details</h5>
         <p><strong>Car:</strong> @Model.Car.Make @Model.Car.Model</p>
-        <p><strong>Customer:</strong> @Model.Customer.Email</p>
         <p><strong>Start Date:</strong> @Model.StartDate.ToString("d")</p>
         <p><strong>End Date:</strong> @Model.EndDate.ToString("d")</p>
         <p><strong>Booking Date:</strong> @Model.BookingDate.ToString("d")</p>
         <a asp-controller="Booking" asp-action="MyBookings" class="btn btn-primary">View My Bookings</a>
+        <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Back to Home</a>
     </div>
 </div>

@@ -1,6 +1,12 @@
 ﻿@model FibergCarRental.Models.Car
 
 <h1>Add New Car</h1>
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewBag.Error
+    </div>
+}
 <form asp-controller="Admin" asp-action="AddCar" method="post">
     <div class="mb-3">
         <label for="make" class="form-label">Make</label>
